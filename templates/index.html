@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>Yemek Kaydı</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 30px auto;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        input, select, button {
+            width: 100%;
+            padding: 10px;
+            margin-top: 8px;
+            font-size: 16px;
+        }
+
+        .message {
+            margin-top: 15px;
+            padding: 10px;
+            background-color: #e2f0cb;
+            border: 1px solid #a3c293;
+            color: #3b663d;
+            font-weight: bold;
+        }
+
+        .nav-links {
+            margin-top: 30px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            background-color: #007BFF;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        @media (max-width: 500px) {
+            .nav-links {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .nav-links a {
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Yarın Yemek Kaydı</h1>
+
+    <form method="POST">
+        <label for="student_id">Öğrenci Numarası (8 hane):</label>
+        <input type="text" id="student_id" name="student_id" pattern="\d{8}" required>
+
+        <label for="program">Program:</label>
+        <select name="program" id="program" required>
+            <option value="">Lütfen Seçiniz</option>
+            <option value="Fizyoterapi 1. Sınıf">Fizyoterapi 1. Sınıf</option>
+            <option value="Fizyoterapi 2. Sınıf">Fizyoterapi 2. Sınıf</option>
+            <option value="Fizyoterapi 3. Sınıf">Fizyoterapi 3. Sınıf</option>
+            <option value="Ergoterapi 1. Sınıf">Ergoterapi 1. Sınıf</option>
+            <option value="Ergoterapi 2. Sınıf">Ergoterapi 2. Sınıf</option>
+            <option value="Hemşirelik">Hemşirelik</option>
+        </select>
+
+        <input type="hidden" name="date" value="{{ date }}">
+        <button type="submit">Kaydet</button>
+    </form>
+
+    {% if mesaj %}
+        <div class="message">{{ mesaj }}</div>
+    {% endif %}
+
+    <div class="nav-links">
+        <a href="/kayitlar">📋 Kayıtları Görüntüle</a>
+        <a href="/csv">⬇️ Excel'e Aktar</a>
+    </div>
+</body>
+</html>
