@@ -3,6 +3,25 @@ import sqlite3
 from datetime import datetime, timedelta
 
 app = Flask(__name__)
+import sqlite3
+
+def initialize_database():
+    conn = sqlite3.connect('veritabani.db')
+    cursor = conn.cursor()
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS meals (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            student_id TEXT NOT NULL,
+            program TEXT NOT NULL,
+            date TEXT NOT NULL
+        )
+    ''')
+    conn.commit()
+    conn.close()
+
+# Bunu app.py'nin en başında bir defa çalıştır:
+initialize_database()
+
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
