@@ -86,9 +86,11 @@
         <button type="submit">Kaydet</button>
     </form>
 
-    {% if mesaj %}
-        <div class="message">{{ mesaj }}</div>
-    {% endif %}
+    {% if success_message %}
+    <div style="margin-top: 10px; color: green; font-weight: bold;">
+        {{ success_message }}
+    </div>
+{% endif %}
 
     <div class="nav-links">
         <a href="/kayitlar">📋 Kayıtları Görüntüle</a>
