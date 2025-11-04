@@ -1,61 +1,11 @@
-from flask import Flask, render_template, request, redirect, url_for, Response
+from flask import Flask, render_template, request
 import sqlite3
 from datetime import datetime
 
 app = Flask(__name__)
 
-# Ana sayfa: form görüntüleme
-@app.route('/')
-def index():
-    return render_template('index.html')
-
-# Form gönderimi: veritabanına kayıt
-@app.route('/submit', methods=['POST'])
-def submit():
-    student_id = request.form['student_id']
-    program = request.form['program']
-    date = datetime.now().strftime('%Y-%m-%d')
-
-    conn = sqlite3.connect('data.db')
-    cursor = conn.cursor()
-    cursor.execute("INSERT INTO meals (student_id, program, date) VALUES (?, ?, ?)",
-                   (student_id, program, date))
-    conn.commit()
-    conn.close()
-
-    return redirect(url_for('index'))
-
-# Kayıtları listele
-@app.route('/kayıtlar')
-def show_records():
-    conn = sqlite3.connect('data.db')
-    cursor = conn.cursor()
-    cursor.execute("SELECT student_id, program, date FROM meals ORDER BY date DESC")
-    records = cursor.fetchall()
-    conn.close()
-    return render_template('kayıtlar.html', records=records)
-
-# CSV olarak dışa aktar
-@app.route('/export')
-def export_csv():
-    conn = sqlite3.connect('data.db')
-    cursor = conn.cursor()
-    cursor.execute("SELECT student_id, program, date FROM meals")
-    rows = cursor.fetchall()
-    conn.close()
-
-    output = '\ufeffÖğrenci No,Program,Tarih\n'
-    for row in rows:
-        output += f"{row[0]},{row[1]},{row[2]}\n"
-
-    return Response(
-        output,
-        mimetype="text/csv; charset=utf-8",
-        headers={"Content-Disposition": "attachment;filename=yemek_kayitlari.csv"}
-    )
-
-# Veritabanı tablosu yoksa oluştur
-if __name__ == '__main__':
+# Veritabanı bağlantısı ve tablo oluşturma
+def init_db():
     conn = sqlite3.connect('data.db')
     cursor = conn.cursor()
     cursor.execute('''
@@ -69,5 +19,37 @@ if __name__ == '__main__':
     conn.commit()
     conn.close()
 
-    # Sunucuyu başlat
+init_db()
+
+# Ana sayfa (form ve kayıt mesajı birlikte burada)
+@app.route('/', methods=['GET', 'POST'])
+def index():
+    message = None
+    if request.method == 'POST':
+        student_id = request.form['student_id']
+        program = request.form['program']
+        date = (datetime.now().date() + timedelta(days=1)).strftime('%Y-%m-%d')
+
+        conn = sqlite3.connect('data.db')
+        cursor = conn.cursor()
+        cursor.execute("INSERT INTO meals (student_id, program, date) VALUES (?, ?, ?)", 
+                       (student_id, program, date))
+        conn.commit()
+        conn.close()
+
+        message = f"Yemekhane kaydınız oluşturuldu. Tarih: {date}"
+
+    return render_template('index.html', message=message)
+
+# Kayıtları listele (isteğe bağlı)
+@app.route('/kayitlar')
+def show_records():
+    conn = sqlite3.connect('data.db')
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM meals")
+    rows = cursor.fetchall()
+    conn.close()
+    return render_template('kayitlar.html', records=rows)
+
+if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
