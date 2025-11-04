@@ -39,7 +39,7 @@ def index():
 
         message = f"Yemekhane kaydınız oluşturuldu. Tarih: {date}"
 
-    return render_template('index.html', message=message)
+    return render_template('index.html', success_message="Yarın için yemekhane kaydınız oluşturulmuştur.")
 
 # Kayıtları listele (isteğe bağlı)
 @app.route('/kayitlar')
