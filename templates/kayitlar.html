@@ -2,61 +2,46 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <title>Kayıtlar</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            max-width: 700px;
-            margin: 30px auto;
-            padding: 20px;
-        }
-
-        h1 {
-            text-align: center;
-            color: #333;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-
-        th, td {
-            border: 1px solid #ccc;
-            padding: 10px;
-            text-align: left;
-        }
-
-        tr:nth-child(even) {
-            background-color: #f2f2f2;
-        }
-
-        a {
-            display: block;
-            margin-top: 20px;
-            text-align: center;
-            color: #007BFF;
-            text-decoration: none;
-        }
-    </style>
+    <title>Yemek Kayıtları</title>
+    <link 
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" 
+      rel="stylesheet">
 </head>
-<body>
-    <h1>Yemek Kayıt Listesi</h1>
-    <table>
-        <tr>
-            <th>Öğrenci No</th>
-            <th>Program</th>
-            <th>Tarih</th>
-        </tr>
-        {% for row in rows %}
-        <tr>
-            <td>{{ row[0] }}</td>
-            <td>{{ row[1] }}</td>
-            <td>{{ row[2] }}</td>
-        </tr>
-        {% endfor %}
-    </table>
-    <a href="/">← Geri Dön</a>
+<body class="bg-light">
+    <div class="container mt-5">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h3>Yemek Kayıtları</h3>
+            <a href="/export" class="btn btn-success">CSV Olarak Dışa Aktar</a>
+        </div>
+
+        {% if records %}
+        <table class="table table-bordered table-striped">
+            <thead class="table-dark">
+                <tr>
+                    <th>#</th>
+                    <th>Öğrenci No</th>
+                    <th>Program</th>
+                    <th>Tarih</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in records %}
+                <tr>
+                    <td>{{ loop.index }}</td>
+                    <td>{{ row[0] }}</td>
+                    <td>{{ row[1] }}</td>
+                    <td>{{ row[2] }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p>Kayıt bulunamadı.</p>
+        {% endif %}
+
+        <div class="mt-4">
+            <a href="/" class="btn btn-secondary">Geri Dön</a>
+        </div>
+    </div>
 </body>
 </html>
