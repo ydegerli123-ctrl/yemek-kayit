@@ -1,47 +1,52 @@
-<!DOCTYPE html>
-<html lang="tr">
-<head>
-    <meta charset="UTF-8">
-    <title>Yemek Kayıtları</title>
-    <link 
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" 
-      rel="stylesheet">
-</head>
-<body class="bg-light">
-    <div class="container mt-5">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-            <h3>Yemek Kayıtları</h3>
-            <a href="{{ url_for('export_csv') }}" class="btn btn-success">CSV Olarak Dışa Aktar</a>
-        </div>
-
-        {% if records %}
-        <table class="table table-bordered table-striped">
-            <thead class="table-dark">
-                <tr>
-                    <th>#</th>
-                    <th>Öğrenci No</th>
-                    <th>Program</th>
-                    <th>Tarih</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for row in records %}
-                <tr>
-                    <td>{{ loop.index }}</td>
-                    <td>{{ row[1] }}</td>
-                    <td>{{ row[2] }}</td>
-                    <td>{{ row[3] }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-        {% else %}
-        <p>Kayıt bulunamadı.</p>
-        {% endif %}
-
-        <div class="mt-4">
-            <a href="/" class="btn btn-secondary">Geri Dön</a>
-        </div>
-    </div>
-</body>
-</html>
+ (cd "$(git rev-parse --show-toplevel)" && git apply --3way <<'EOF' 
+diff --git a/templates/kayitlar.html b/templates/kayitlar.html
+index b866e83e98532a8ddd44fd8cc51eaa16e5e3f01a..99f9ecede7cb67d57c521dbcfa0f53744db1d34c 100644
+--- a/templates/kayitlar.html
++++ b/templates/kayitlar.html
+@@ -6,42 +6,42 @@
+     <link 
+       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" 
+       rel="stylesheet">
+ </head>
+ <body class="bg-light">
+     <div class="container mt-5">
+         <div class="d-flex justify-content-between align-items-center mb-3">
+             <h3>Yemek Kayıtları</h3>
+             <a href="{{ url_for('export_csv') }}" class="btn btn-success">CSV Olarak Dışa Aktar</a>
+         </div>
+ 
+         {% if records %}
+         <table class="table table-bordered table-striped">
+             <thead class="table-dark">
+                 <tr>
+                     <th>#</th>
+                     <th>Öğrenci No</th>
+                     <th>Program</th>
+                     <th>Tarih</th>
+                 </tr>
+             </thead>
+             <tbody>
+                 {% for row in records %}
+                 <tr>
+                     <td>{{ loop.index }}</td>
++                    <td>{{ row[0] }}</td>
+                     <td>{{ row[1] }}</td>
+                     <td>{{ row[2] }}</td>
+-                    <td>{{ row[3] }}</td>
+                 </tr>
+                 {% endfor %}
+             </tbody>
+         </table>
+         {% else %}
+         <p>Kayıt bulunamadı.</p>
+         {% endif %}
+ 
+         <div class="mt-4">
+             <a href="/" class="btn btn-secondary">Geri Dön</a>
+         </div>
+     </div>
+ </body>
+ </html>
+ 
+EOF
+)
