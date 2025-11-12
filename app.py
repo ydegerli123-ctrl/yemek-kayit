@@ -41,7 +41,7 @@ def kayitlar():
     cursor.execute("SELECT student_id, program, date FROM meals")
     rows = cursor.fetchall()
     conn.close()
-    return render_template('kayitlar.html', rows=rows)
+    return render_template('kayitlar.html', records=rows)
 
 @app.route('/csv')
 def export_csv():
