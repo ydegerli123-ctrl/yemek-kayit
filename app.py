@@ -4,6 +4,30 @@ from datetime import datetime, timedelta
 
 app = Flask(__name__)
 
+
+def init_db():
+    """Ensure the SQLite database and meals table exist before handling requests."""
+    conn = sqlite3.connect('data.db')
+    try:
+        cursor = conn.cursor()
+        cursor.execute(
+            '''
+            CREATE TABLE IF NOT EXISTS meals (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                student_id TEXT,
+                program TEXT,
+                date TEXT
+            )
+            '''
+        )
+        conn.commit()
+    finally:
+        conn.close()
+
+
+# Veritabanını uygulama ayağa kalkarken hazırla (Render gibi ortamlarda gereklidir)
+init_db()
+
 @app.route('/', methods=['GET', 'POST'])
 def index():
     tomorrow = (datetime.now() + timedelta(days=1)).strftime('%Y-%m-%d')
@@ -62,17 +86,5 @@ def export_csv():
     )
 
 if __name__ == '__main__':
-    conn = sqlite3.connect('data.db')
-    cursor = conn.cursor()
-    cursor.execute('''
-        CREATE TABLE IF NOT EXISTS meals (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            student_id TEXT,
-            program TEXT,
-            date TEXT
-        )
-    ''')
-    conn.commit()
-    conn.close()
-
+    init_db()
     app.run(host='0.0.0.0', port=5000, debug=True)
